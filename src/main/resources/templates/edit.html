@@ -1,0 +1,24 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css" />
+        <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}" type="text/css" />
+        <link rel="stylesheet" th:href="@{/resources/css/style.css}" type="text/css" />
+        <title th:text="#{guestbook.title}">edit</title>
+    </head>
+    <body>
+        <h1 class="text-center">Editing</h1>
+
+        <form method="PUT" role="form" class="gb-form" id="form" th:action="@{/guestbook/}" th:object="${form}">
+
+            <div class="form-group">
+                <label for="edited text">edited text</label>
+                <textarea th:field="*{editedText}" th:errrorclass="is-invalid" class="form-control" required="required"></textarea>
+            </div>
+
+            <input type="submit" class="btn btn-secondary" value="Submit"/>
+        </form>
+    </body>
+</html>
