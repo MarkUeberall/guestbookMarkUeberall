@@ -97,8 +97,6 @@ class GuestbookController {
 	@PostMapping(path = "/guestbook")
 	String addEntry(@Valid @ModelAttribute("form") GuestbookForm form, Errors errors, Model model) {
 
-		System.out.println("posted!");
-
 		if (errors.hasErrors()) {
 			return guestBook(model, form);
 		}
@@ -108,20 +106,26 @@ class GuestbookController {
 		return "redirect:/guestbook";
 	}
 
-	@GetMapping(path = "/guestbook/{entry}/edit")
-	String editing(Model model, @ModelAttribute(binding = false) EditForm form) {
+	@PostMapping(path = "/guestbook/{entry}")
+	String guestbookEditRedirect(@PathVariable Optional<GuestbookEntry> entry) {
+		return "redirect:" + entry.get().getId() + "/edit";
+	}
 
-		model.addAttribute("form", form);
+	@GetMapping(path = "/guestbook/{entry}/edit")
+	String guestbookEdit(Model model, @ModelAttribute(binding = false) EditForm editform) {
+
+		model.addAttribute("editform", editform);
 		return "edit";
 	}
 
 	@PostMapping(path = "/guestbook/{entry}/edit")
-	String editEntry(@Valid @ModelAttribute("form") EditForm form, Errors errors, Model model, @PathVariable Optional<GuestbookEntry> entry) {
+	String editEntry(@Valid @ModelAttribute("editform") EditForm editform, Errors errors, Model model, @PathVariable Optional<GuestbookEntry> entry) {
+
+		System.out.println("editing");
 
 		GuestbookEntry editEntry = entry.get();
-		editEntry.setText(form.getEditedText());
+		editEntry.setText(editform.getEditedText());
 		guestbook.save(editEntry);
-
 
 		return "redirect:/guestbook";
 	}
@@ -168,13 +172,15 @@ class GuestbookController {
 		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping(path = "/guestbook/{entry}")
-	String editEntry(@PathVariable Optional<GuestbookEntry> entry) {
-		GuestbookEntry bookEntry = entry.get();
+	/**
+	 @PreAuthorize("hasRole('ADMIN')")
+	 @PostMapping(path = "/guestbook/{entry}")
+	 String editEntry(@PathVariable Optional<GuestbookEntry> entry) {
+	 GuestbookEntry bookEntry = entry.get();
 
-		return "redirect:/guestbook/" + bookEntry.getId() + "/edit";
-	}
+	 return "redirect:/guestbook/" + bookEntry.getId() + "/edit";
+	 }
+	 **/
 
 	/**
 	 * Handles AJAX requests to delete {@link GuestbookEntry}s. Otherwise, this method is similar
@@ -193,5 +199,9 @@ class GuestbookController {
 			return ResponseEntity.ok().build();
 
 		}).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	public GuestbookRepository getGuestbook() {
+		return guestbook;
 	}
 }

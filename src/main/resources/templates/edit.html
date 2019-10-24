@@ -11,7 +11,8 @@
     <body>
         <h1 class="text-center">Editing</h1>
 
-        <form method="PUT" role="form" class="gb-form" id="form" th:action="@{/guestbook/}" th:object="${form}">
+        <!-- <form method="post" role="form" class="gb-form" id="form" th:action="@{/guestbook/{id}/edit(id=${entry.id})}" th:attr="data-entry-id=${entry.id}" th:object="${editform}"> --->
+        <form method="post" role="form" class="gb-form" id="form" th:action="@{/guestbook/1/edit}" th:object="${editform}">
 
             <div class="form-group">
                 <label for="edited text">edited text</label>
